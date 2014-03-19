@@ -1,0 +1,6 @@
+
+T=HomeArmR.fkine(ql);
+q=zoros(7,1,s)
+for i=1:size(ql,1)
+    [q,isOK]=home_IKNumSolution(transl(T(:,:,i)),t2r(T(:,:,1)), ql(i,:)'); 
+end
