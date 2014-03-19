@@ -1,4 +1,4 @@
-function y=OneDimDMPwithV(x,xd,xdd,t_dem,t_run,g_m,v_m)
+function y=OneDimDMPwithV(x,t_dem,t_run,g_m,v_m)
 %% 
 %     输入的是：1）示教轨迹 包括dem_time x xd xdd
 %               2) 规划轨迹的时间 traj_time 
@@ -11,6 +11,10 @@ function y=OneDimDMPwithV(x,xd,xdd,t_dem,t_run,g_m,v_m)
 % xdd = diff(xd)/dt;
 % xdd = [xdd xdd(end)];
 dt=0.001;
+xd = diff(x);
+xd =[xd, xd(end)]/dt;
+xdd = diff(xd);
+xdd=[xdd,xdd(end)]/dt;
 dem_time=t_dem;
 t_dem=0:dt:t_dem;
 
@@ -80,24 +84,24 @@ for i=1:length(t_run)
     dmp.ydd(i)=dmp.x1_dd;
 
 end
-
-y=[dmp.y;dmp.yd;dmp.ydd];
-
-subplot(1,3,1);
-plot(t_dem,x,'.g');
-hold on
-plot(t_run,dmp.tmp,'k')
-hold on
-plot(t_run,dmp.y,'r');
-
-subplot(1,3,2);
-plot(t_dem,xd,'.g');
-hold on
-plot(t_run,dmp.yd,'r');
-
-subplot(1,3,3);
-plot(t_dem,xdd,'.g');
-hold on
-plot(t_run,dmp.ydd,'r');
+y=[dmp.y'];
+% y=[dmp.y',dmp.yd',dmp.ydd'];
+% figure;
+% subplot(1,3,1);
+% plot(t_dem,x,'.g');
+% hold on
+% plot(t_run,dmp.tmp,'k')
+% hold on
+% plot(t_run,dmp.y,'r');
+% 
+% subplot(1,3,2);
+% plot(t_dem,xd,'.g');
+% hold on
+% plot(t_run,dmp.yd,'r');
+% 
+% subplot(1,3,3);
+% plot(t_dem,xdd,'.g');
+% hold on
+% plot(t_run,dmp.ydd,'r');
 end
 
