@@ -53,16 +53,16 @@ plotopt=HomeArmR.plot({'noshadow'});
 hold on
 % [R,t]=tr2rt(HomeArmR.fkine(q_m));
 % plot3(t(1),t(2),t(3),'g*');
-[R,t]=tr2rt(HomeArmR.fkine(ql));
+[R,t]=tr2rt(HomeArmR.fkine(q));
 color=['b','g','r'];
 % for i=1:1700:5100
 %     plot3(t(i:i+1700-1,1)',t(i:i+1700-1,2)',t(i:i+1700-1,3)',color(fix(i/1700)+1))
 % end 
 plot3(t(:,1)',t(:,2)',t(:,3)','r')
 hold on
-for i=1:size(q,1)
-    HomeArmR.plot(q(i,:),plotopt);
-end
-
+% for i=1:size(q,1)
+%     HomeArmR.plot(q(i,:),plotopt);
+% end
+HomeArmR.plot(q(577:end,:),plotopt);
 
 
