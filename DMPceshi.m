@@ -28,7 +28,7 @@ ql = [arm_angles(:,1),arm_angles(:,4),arm_angles(:,7),arm_angles(:,10),arm_angle
 % length = size(ql,1);
 % length_d = fix(length/1001);
 % ql = ql(1:length_d:length_d*1001,:);
-ql = ql(1:1700,:);
+ql = ql(1:500,:);
 %% 方法一：直接在关节空间进行DMP
 % 彻底失败，一通乱转
 % for i=1:7
@@ -37,11 +37,15 @@ ql = ql(1:1700,:);
 % end
 
 %% 方法二 位姿空间进行DMP
-T=HomeArmR.fkine(ql);
+% T=HomeArmR.fkine(ql);
+for i=1:size(ql,1)
+    T(:,:,i)=home_ArmForwardKinematics(ql(i,:),7);
+end 
 q=zeros(7,1,size(ql,1));
 isOK=ones(size(ql,1),1);
 for i=1:size(ql,1)
     [q(:,:,i),isOK(i,1)]=home_IKNumSolution(transl(T(:,:,i)),t2r(T(:,:,1)), ql(i,:)'); 
+%     [q(:,:,i),isOK(i,1)]=home_IKNumSolution_main(transl(T(:,:,i)),t2r(T(:,:,1)));
 end
 %% 仿真
 q=permute(q,[3,1,2]);
@@ -60,9 +64,8 @@ color=['b','g','r'];
 % end 
 plot3(t(:,1)',t(:,2)',t(:,3)','r')
 hold on
-% for i=1:size(q,1)
-%     HomeArmR.plot(q(i,:),plotopt);
-% end
-HomeArmR.plot(q(577:end,:),plotopt);
+for i=1:size(q,1)
+    HomeArmR.plot(q(i,:),plotopt);
+end
 
 
