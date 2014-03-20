@@ -47,8 +47,10 @@ dmp.gm=x(end)-dmp.vm*dem_time+dmp.vm*t_dem;
 dmp.f = (dmp.tau.^2*xdd-dmp.K*(dmp.gm-x)-dmp.D*(dmp.vm-dmp.tau*xd)+dmp.K*(dmp.gm-dmp.x0).*dmp.s )/dmp.K;   %1*1001
 
 % locally weighted linear regression
-wDen = sum( dmp.psi ,2);
-wNum = sum( dmp.psi .* ( ones(length(dmp.wc),1)*dmp.f ) ,2);
+% wDen = sum( dmp.psi ,2);
+% wNum = sum( dmp.psi .* ( ones(length(dmp.wc),1)*dmp.f ) ,2);
+wDen = sum( dmp.psi .* ( ones(length(dmp.wc),1)*(dmp.s.*dmp.s) ) ,2);
+wNum = sum( dmp.psi .* ( ones(length(dmp.wc),1)*(dmp.s.*dmp.f) ) ,2);
 dmp.w = wNum./(wDen);%+1.e-10
 %% 学习后轨迹再现
 % dmp参数初始化

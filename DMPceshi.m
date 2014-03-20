@@ -56,7 +56,7 @@ end
 %Î»ÖÃDMP
 p_orign=transl(T);
 for i=1:3    
-    [p_DMP(:,i),gtmp(i,:)]=OneDimDMPwithV(p_orign(:,i)',1,1,0.4,0.1);%p_end = p_orign(end,i); v = (p_orign(end,i)-p_orign(end-1,i))/0.001
+    [p_DMP(:,i),gtmp(i,:)]=OneDimDMPwithV(p_orign(:,i)',1,1,p_orign(end,i)*0.9,(p_orign(end,i)-p_orign(end-1,i))/0.001+0.5);%p_end = p_orign(end,i); v = (p_orign(end,i)-p_orign(end-1,i))/0.001
 end
 %×ËÌ¬DMP
 R_orign=tr2rpy(T);
