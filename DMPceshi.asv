@@ -115,7 +115,7 @@ plot3(p_DMP(:,1)',p_DMP(:,2)',p_DMP(:,3)','.g')
 grid on
 hold on
 for i=1:size(q,1)
-    HomeArmR.plot(qr(i,:),plotopt);
+    HomeArmR.plot(q(i,:),plotopt);
 end
 
 
