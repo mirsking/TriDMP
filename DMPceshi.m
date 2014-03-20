@@ -78,9 +78,10 @@ if ToolboxWay==1
             T_DMP(1:3,1:3,i)=T(1:3,1:3,i);
         end
     end
-    nPoint=3;
+    nPoint=4;
     q(1,:)=HomeArmR.ikine(T_DMP(:,:,1));
-    q(nPoint-1,:)=HomeArmR.ikine(T_DMP(:,:,round(end/2)),'pinv');
+    q(nPoint-2,:)=HomeArmR.ikine(T_DMP(:,:,round(end/3)),'pinv');
+    q(nPoint-1,:)=HomeArmR.ikine(T_DMP(:,:,round(2*end/3)),'pinv');
     q(nPoint,:)=HomeArmR.ikine(T_DMP(:,:,end),'pinv');
 else
     T_DMP=T;
@@ -92,6 +93,14 @@ else
     [q(:,:,nPoint),isOK(nPoint,1)]=home_IKNumSolution(transl(T_DMP(:,:,nPoint)),t2r(T_DMP(:,:,nPoint)), qr(nPoint-1,:)');
     q=permute(q,3,1,2);
 end
+t=[0,1/3,2/3,1]';
+q= [q,zeros(size(q,1),7)];
+[ss,tt]=cubicSplineVnA(q,t,0.001);
+plot(t,q,'o',tt,ss)
+q=ss(:,1:7);
+%% 对q进行插值
+
+
 % q=zeros(7,1,size(ql,1));
 % isOK=ones(size(ql,1),1);
 % for i=1:size(ql,1)
@@ -117,7 +126,7 @@ plot3(gtmp(1,:),gtmp(2,:),gtmp(3,:),'k');
 plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'k*');
 grid on
 hold on
-for i=1:size(q,1)
+for i=1:10:size(q,1)
     HomeArmR.plot(q(i,:),plotopt);
 end
 
