@@ -1,4 +1,4 @@
-function y=OneDimDMPwithV(x,t_dem,t_run,g_m,v_m)
+function [y,gm]=OneDimDMPwithV(x,t_dem,t_run,g_m,v_m)
 %% 
 %     输入的是：1）示教轨迹 包括dem_time x xd xdd
 %               2) 规划轨迹的时间 traj_time 
@@ -85,6 +85,7 @@ for i=1:length(t_run)
 
 end
 y=[dmp.y'];
+gm=dmp.tmp;
 % % y=[dmp.y',dmp.yd',dmp.ydd'];
 % figure;
 % subplot(1,3,1);

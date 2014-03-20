@@ -56,12 +56,12 @@ end
 %位置DMP
 p_orign=transl(T);
 for i=1:3    
-    p_DMP(:,i)=OneDimDMPwithV(p_orign(:,i)',1,1,p_orign(end,i),(p_orign(end,i)-p_orign(end-1,i))/0.001);
+    [p_DMP(:,i),gtmp(i,:)]=OneDimDMPwithV(p_orign(:,i)',1,1,0.4,0.1);%p_end = p_orign(end,i); v = (p_orign(end,i)-p_orign(end-1,i))/0.001
 end
 %姿态DMP
 R_orign=tr2rpy(T);
 for i=1:3    
-    R_DMP(:,i)=OneDimDMPwithV(R_orign(:,i)',1,1,R_orign(end,i),(R_orign(end,i)-R_orign(end-1,i))/0.001);
+    [R_DMP(:,i),gtmp(i+3,:)]=OneDimDMPwithV(R_orign(:,i)',1,1,R_orign(end,i),(R_orign(end,i)-R_orign(end-1,i))/0.001);
 end
 %% 如何将DMP得到的轨迹逆运动到关节空间
 %1、找到目标点和当前点的位姿
@@ -112,10 +112,13 @@ hold on
 plot3(p_orign(:,1)',p_orign(:,2)',p_orign(:,3)','r')
 hold on
 plot3(p_DMP(:,1)',p_DMP(:,2)',p_DMP(:,3)','.g')
+hold on
+plot3(gtmp(1,:),gtmp(2,:),gtmp(3,:),'k');
+plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'k*');
 grid on
 hold on
 for i=1:size(q,1)
-    HomeArmR.plot(qr(i,:),plotopt);
+    HomeArmR.plot(q(i,:),plotopt);
 end
 
 
