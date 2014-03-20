@@ -112,14 +112,14 @@ q=ss(:,1:7);
 figure
 workDims=[-reach reach -reach reach -reach reach];
 axis(workDims)
-set(gca, 'Zdir', 'reverse','drawmode', 'fast'); view(137,30);
+set(gca, 'Zdir', 'reverse','drawmode', 'fast'); view(140,34);
 plotopt=HomeArmR.plot({'noshadow'});
 hold on
 % 身体尺寸,分别沿xyz轴
 a=0.095;
 b=0.09;
 c=0.4;
-[vertCell faceCell colorCell]=blockSurf([-a/2,-b/2,0.01],a,b,c,'b');
+[vertCell faceCell colorCell]=blockSurf([-a/2,-b/2,0.01],a,b,c,'m');
 p0=patch('Vertices',vertCell,'Faces',faceCell,'FaceVertexCData',colorCell,'FaceColor','flat');
 % color=['b','g','r'];
 % for i=1:1700:5100
@@ -140,7 +140,7 @@ for i=1:10:size(q,1)
     hold on
     HomeArmR.plot(q(i,:),plotopt);
     hold on
-    MakeGif(i);
+    MakeGif('DMP.gif',i);
 end
 hold on
 plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'k*');

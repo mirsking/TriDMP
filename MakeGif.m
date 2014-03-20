@@ -1,5 +1,5 @@
-function MakeGif(i)
-    filename = 'xizh.gif';
+function MakeGif(filename,i)
+%     filename = 'xizh.gif';
     f = getframe(gcf);
     imind = frame2im(f);
     [imind,cm] = rgb2ind(imind,256);
