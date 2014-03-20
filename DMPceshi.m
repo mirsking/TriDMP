@@ -125,16 +125,23 @@ p0=patch('Vertices',vertCell,'Faces',faceCell,'FaceVertexCData',colorCell,'FaceC
 % for i=1:1700:5100
 %     plot3(t(i:i+1700-1,1)',t(i:i+1700-1,2)',t(i:i+1700-1,3)',color(fix(i/1700)+1))
 % end 
+grid on
+%原始轨迹
 plot3(p_orign(:,1)',p_orign(:,2)',p_orign(:,3)','r')
 hold on
+%生成轨迹
 plot3(p_DMP(:,1)',p_DMP(:,2)',p_DMP(:,3)','.g')
 hold on
-plot3(gtmp(1,:),gtmp(2,:),gtmp(3,:),'k');
-plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'k*');
-grid on
+%初始位置
+plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'b*');
 hold on
 for i=1:10:size(q,1)
+    plot3(gtmp(1,i),gtmp(2,i),gtmp(3,i),'k*');
+    hold on
     HomeArmR.plot(q(i,:),plotopt);
+    hold on
 end
+hold on
+plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'k*');
 
 
