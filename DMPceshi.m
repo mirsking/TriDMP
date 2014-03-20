@@ -140,8 +140,11 @@ for i=1:10:size(q,1)
     hold on
     HomeArmR.plot(q(i,:),plotopt);
     hold on
+    MakeGif(i);
 end
 hold on
 plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'k*');
+
+
 
 

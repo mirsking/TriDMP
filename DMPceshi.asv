@@ -132,14 +132,38 @@ hold on
 %生成轨迹
 plot3(p_DMP(:,1)',p_DMP(:,2)',p_DMP(:,3)','.g')
 hold on
-% 
-plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'k*');
-
+%初始位置
+plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'b*');
+hold on
+for i=1:10:size(q,1)
+    plot3(gtmp(1,i),gtmp(2,i),gtmp(3,i),'k*');
+    hold on
+    HomeArmR.plot(q(i,:),plotopt);
+    hold on
+end
 hold on
 plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'k*');
-for i=1:10:size(q,1)
-    plot3(gtmp(1,i),gtmp(2,i),gtmp(3,i),'k');
-    HomeArmR.plot(q(i,:),plotopt);
+
+
+filename = 'dmp.gif';%保存的动画名
+for j = 1:20
+bili = sin(pi*j/20);
+set(p,'XData',bili*XX,'YData',bili*YY,'ZData',bili*ZZ) 
+F(j) = getframe;
+%制作gif主要代码
+drawnow
+frame = getframe(gcf);
+im = frame2im(frame);
+[imind,cm] = rgb2ind(im,256);
+if j == 1;
+imwrite(imind,cm,filename,'gif', 'Loopcount',inf,'DelayTime',0.1);
+else
+imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0.1);
 end
+%
+end
+% 放映10次
+figure
+movie(F,10)
 
 
