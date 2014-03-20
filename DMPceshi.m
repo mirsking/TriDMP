@@ -8,6 +8,9 @@ ToolboxWay=1;%使用工具箱解法
 %是否对姿态进行DMP
 % RotFlag=1;%对姿态进行调整
 RotFlag=0;%不对姿态进行DMP
+%是否保存为gif
+% SaveGif=1;%保存为GIF
+SaveGif=0;%不保存为GIF
 %% ********************************************%
 %*****************0 Make Arm Model********************%
 %*****************************************************%
@@ -78,11 +81,11 @@ if ToolboxWay==1
             T_DMP(1:3,1:3,i)=T(1:3,1:3,i);
         end
     end
-    nPoint=5;
+    nPoint=4;
     q(1,:)=HomeArmR.ikine(T_DMP(:,:,1));
-    q(nPoint-3,:)=HomeArmR.ikine(T_DMP(:,:,round(end/4)),'pinv');
-    q(nPoint-2,:)=HomeArmR.ikine(T_DMP(:,:,round(end/2)),'pinv');
-    q(nPoint-1,:)=HomeArmR.ikine(T_DMP(:,:,round(3*end/4)),'pinv');
+%     q(nPoint-3,:)=HomeArmR.ikine(T_DMP(:,:,round((nPoint-4)*end/(nPoint-1))),'pinv');
+    q(nPoint-2,:)=HomeArmR.ikine(T_DMP(:,:,round((nPoint-3)*end/(nPoint-1))),'pinv');
+    q(nPoint-1,:)=HomeArmR.ikine(T_DMP(:,:,round((nPoint-2)*end/(nPoint-1))),'pinv');
     q(nPoint,:)=HomeArmR.ikine(T_DMP(:,:,end),'pinv');
 else
     T_DMP=T;
@@ -113,6 +116,7 @@ figure
 workDims=[-reach reach -reach reach -reach reach];
 axis(workDims)
 set(gca, 'Zdir', 'reverse','drawmode', 'fast'); view(140,34);
+set(gcf,'Position',[80 80 700 600])%[a b c d] ab为figure在屏幕上的原点，以左下角为准。c d为figure 图像尺寸
 plotopt=HomeArmR.plot({'noshadow'});
 hold on
 % 身体尺寸,分别沿xyz轴
@@ -136,14 +140,16 @@ hold on
 plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'b*');
 hold on
 for i=1:10:size(q,1)
-    plot3(gtmp(1,i),gtmp(2,i),gtmp(3,i),'k*');
+    plot3(gtmp(1,i),gtmp(2,i),gtmp(3,i),'c*');
     hold on
     HomeArmR.plot(q(i,:),plotopt);
     hold on
-    MakeGif('DMP.gif',i);
+    if SaveGif==1
+        MakeGif('DMP.gif',i);
+    end
 end
 hold on
-plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'k*');
+plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'c*');
 
 
 

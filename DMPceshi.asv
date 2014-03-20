@@ -8,6 +8,9 @@ ToolboxWay=1;%使用工具箱解法
 %是否对姿态进行DMP
 % RotFlag=1;%对姿态进行调整
 RotFlag=0;%不对姿态进行DMP
+%是否保存为gif
+% SaveGif=1;%保存为GIF
+SaveGif=0;%不保存为GIF
 %% ********************************************%
 %*****************0 Make Arm Model********************%
 %*****************************************************%
@@ -78,11 +81,11 @@ if ToolboxWay==1
             T_DMP(1:3,1:3,i)=T(1:3,1:3,i);
         end
     end
-    nPoint=5;
+    nPoint=4;
     q(1,:)=HomeArmR.ikine(T_DMP(:,:,1));
-    q(nPoint-3,:)=HomeArmR.ikine(T_DMP(:,:,round(end/4)),'pinv');
-    q(nPoint-2,:)=HomeArmR.ikine(T_DMP(:,:,round(end/2)),'pinv');
-    q(nPoint-1,:)=HomeArmR.ikine(T_DMP(:,:,round(3*end/4)),'pinv');
+%     q(nPoint-3,:)=HomeArmR.ikine(T_DMP(:,:,round((nPoint-4)*end/(nPoint-1))),'pinv');
+    q(nPoint-2,:)=HomeArmR.ikine(T_DMP(:,:,round((nPoint-3)*end/(nPoint-1))),'pinv');
+    q(nPoint-1,:)=HomeArmR.ikine(T_DMP(:,:,round((nPoint-2)*end/(nPoint-1))),'pinv');
     q(nPoint,:)=HomeArmR.ikine(T_DMP(:,:,end),'pinv');
 else
     T_DMP=T;
@@ -112,14 +115,15 @@ q=ss(:,1:7);
 figure
 workDims=[-reach reach -reach reach -reach reach];
 axis(workDims)
-set(gca, 'Zdir', 'reverse','drawmode', 'fast'); view(137,30);
+set(gca, 'Zdir', 'reverse','drawmode', 'fast'); view(140,34);
+set(gcf,'Position',[50 50 600 600])
 plotopt=HomeArmR.plot({'noshadow'});
 hold on
 % 身体尺寸,分别沿xyz轴
 a=0.095;
 b=0.09;
 c=0.4;
-[vertCell faceCell colorCell]=blockSurf([-a/2,-b/2,0.01],a,b,c,'b');
+[vertCell faceCell colorCell]=blockSurf([-a/2,-b/2,0.01],a,b,c,'m');
 p0=patch('Vertices',vertCell,'Faces',faceCell,'FaceVertexCData',colorCell,'FaceColor','flat');
 % color=['b','g','r'];
 % for i=1:1700:5100
@@ -136,34 +140,17 @@ hold on
 plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'b*');
 hold on
 for i=1:10:size(q,1)
-    plot3(gtmp(1,i),gtmp(2,i),gtmp(3,i),'k*');
+    plot3(gtmp(1,i),gtmp(2,i),gtmp(3,i),'y*');
     hold on
     HomeArmR.plot(q(i,:),plotopt);
     hold on
+    if SaveGif==1
+        MakeGif('DMP.gif',i);
+    end
 end
 hold on
 plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'k*');
 
 
-filename = 'dmp.gif';%保存的动画名
-for j = 1:20
-bili = sin(pi*j/20);
-set(p,'XData',bili*XX,'YData',bili*YY,'ZData',bili*ZZ) 
-F(j) = getframe;
-%制作gif主要代码
-drawnow
-frame = getframe(gcf);
-im = frame2im(frame);
-[imind,cm] = rgb2ind(im,256);
-if j == 1;
-imwrite(imind,cm,filename,'gif', 'Loopcount',inf,'DelayTime',0.1);
-else
-imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0.1);
-end
-%
-end
-% 放映10次
-figure
-movie(F,10)
 
 
