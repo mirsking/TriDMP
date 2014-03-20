@@ -1,11 +1,10 @@
 %% MakeGif save the pictures in the figure window to a dynamic photo.
 % example:
 %    MakeGif(filename,i) 
-%    filename is photo's name you want to save with a extension name of
-%    gif.
+%    filename is photo's name you want to save with a extension
 %    i means the ith picture of the dynamic photo. That's to say when
 %    you plot the ith picture, use MakeGif(filename,i) to save it, and
-%    after you finish the plot, the photo will contain all your picture.
+%    after you finish the plot, the gif will contain all your picture.
 function MakeGif(filename,i)
     f = getframe(gcf);
     imind = frame2im(f);
