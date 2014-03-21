@@ -6,5 +6,9 @@ function pot=psi_obstacle(x,v,dim)
     px=norm(x-obstacle);
 	v_norm=norm(v);
     cosa=v'*x;
-    pot=lambda*(-cosa)^2*v_norm/px;
+    if cosa>0
+        pot=0;
+    else
+        pot=-lambda*(cosa)^2*v_norm/px;
+    end
 end

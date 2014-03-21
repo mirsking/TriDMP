@@ -9,7 +9,7 @@ ToolboxWay=1;%使用工具箱解法
 % RotFlag=1;%对姿态进行调整
 RotFlag=0;%不对姿态进行DMP
 %是否保存为gif
-% SaveGif=1;%保存为GIF
+SaveGif=1;%保存为GIF
 SaveGif=0;%不保存为GIF
 %% ********************************************%
 %*****************0 Make Arm Model********************%
@@ -59,11 +59,12 @@ end
 %位置DMP
 p_orign=transl(T)';
 i_obstacle=fix(size(p_orign,2)/2);
+% i_obstacle=1;
 obstacle=p_orign(:,i_obstacle);
 % for i=1:3    
 %     [p_DMP(:,i),gtmp(i,:)]=OneDimDMPwithV(p_orign(:,i)',1,1,p_orign(end,i)*0.9,(p_orign(end,i)-p_orign(end-1,i))/0.001+0.5);%p_end = p_orign(end,i); v = (p_orign(end,i)-p_orign(end-1,i))/0.001
 % end
-[p_DMP(:,1:3),gtmp(1:3,:)]=OneDimDMPwithVv2(p_orign,1,1,1.02*p_orign(:,end),0.2+(p_orign(:,end)-p_orign(:,(end-1)))/0.001);
+[p_DMP(:,1:3),gtmp(1:3,:)]=OneDimDMPwithVv2(p_orign,1,1,1.01*p_orign(:,end),0.2+(p_orign(:,end)-p_orign(:,(end-1)))/0.001);
 %姿态DMP
 R_orign=tr2rpy(T)';
 % for i=1:3    
@@ -117,16 +118,16 @@ q=ss(:,1:7);
 % end
 %% 仿真
 figure
-workDims=[-reach reach -reach reach -reach reach];
+workDims=[-reach reach -reach reach -0.2 reach]*0.8;
 axis(workDims)
-set(gca, 'Zdir', 'reverse','drawmode', 'fast'); view(140,34);
+set(gca, 'Zdir', 'reverse','drawmode', 'fast'); view(145,12);
 set(gcf,'Position',[80 80 700 600])%[a b c d] ab为figure在屏幕上的原点，以左下角为准。c d为figure 图像尺寸
 plotopt=HomeArmR.plot({'noshadow'});
 hold on
 % 身体尺寸,分别沿xyz轴
 a=0.095;
 b=0.09;
-c=0.4;
+c=0.1;
 [vertCell faceCell colorCell]=blockSurf([-a/2,-b/2,0.01],a,b,c,'m');
 p0=patch('Vertices',vertCell,'Faces',faceCell,'FaceVertexCData',colorCell,'FaceColor','flat');
 % color=['b','g','r'];
