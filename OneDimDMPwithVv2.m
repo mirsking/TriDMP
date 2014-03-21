@@ -72,8 +72,12 @@ function [y,gm]=OneDimDMPwithVv2(x,t_dem,t_run,g_m,v_m)%i_obstacle
             dmp.tmp(j,i)=dmp.gm(j);
             dmp.psi1(:,j) = exp(-dmp.wh.*((dmp.s1(j)-dmp.wc).^2));
             dmp.f1(j) = sum(dmp.psi1(:,j).*dmp.w(:,:,j)*dmp.s1(j))/sum(dmp.psi1(:,j)+1.e-10);
-            %     dmp.v1_d=(dmp.K*(dmp.gm-dmp.x1)+dmp.D*(dmp.vm-dmp.v1)-dmp.K*(dmp.gm-dmp.x0)*dmp.s1+dmp.K*dmp.f1)/dmp.tau;
-            dmp.v1_d(j)=(dmp.K*(dmp.gm(j)-dmp.x1(j))+dmp.D*(dmp.vm(j)-dmp.v1(j))-dmp.K*(dmp.gm(j)-dmp.x0(j))*dmp.s1(j)+dmp.K*dmp.f1(j))/dmp.tau;%+psi_obstacle(dmp.x1,dmp.v1,i_obstacle)
+            if i==1
+                dmp.v1_d(j)=(dmp.K*(dmp.gm(j)-dmp.x1(j))+dmp.D*(dmp.vm(j)-dmp.v1(j))-dmp.K*(dmp.gm(j)-dmp.x0(j))*dmp.s1(j)+dmp.K*dmp.f1(j)+psi_obstacle(dmp.x1(j),dmp.v1(j),j))/dmp.tau;           
+            else       
+                dmp.v1_d(j)=(dmp.K*(dmp.gm(j)-dmp.x1(j))+dmp.D*(dmp.vm(j)-dmp.v1(j))-dmp.K*(dmp.gm(j)-dmp.x0(j))*dmp.s1(j)+dmp.K*dmp.f1(j)+psi_obstacle(dmp.y(j,i-1),dmp.tau*dmp.yd(j,i-1),j))/dmp.tau;
+            end
+            %由于循环x_dim次才能更新本次的全部坐标信息，所以暂时使用上一次的点作为势场计算基准
             dmp.x1_d(j)=dmp.v1(j)/dmp.tau;
             dmp.x1_dd(j)=dmp.v1_d(j)/dmp.tau;
             dmp.s1d(j) = -dmp.alpha*dmp.s1(j)/dmp.tau;
@@ -90,26 +94,26 @@ function [y,gm]=OneDimDMPwithVv2(x,t_dem,t_run,g_m,v_m)%i_obstacle
     end
     y=[dmp.y'];
     gm=dmp.tmp;
-    % % y=[dmp.y',dmp.yd',dmp.ydd'];
-    for i=1:x_dim
-        figure;
-        subplot(1,3,1);
-        plot(t_dem,x(i,:),'.g');
-        hold on
-        plot(t_run,dmp.tmp(i,:),'k')
-        hold on
-        plot(t_run,dmp.y(i,:),'r');
-
-        subplot(1,3,2);
-        plot(t_dem,xd(i,:),'.g');
-        hold on
-        plot(t_run,dmp.yd(i,:),'r');
-
-        subplot(1,3,3);
-        plot(t_dem,xdd(i,:),'.g');
-        hold on
-        plot(t_run,dmp.ydd(i,:),'r');
-    end
+%     % % y=[dmp.y',dmp.yd',dmp.ydd'];
+%     for i=1:x_dim
+%         figure;
+%         subplot(1,3,1);
+%         plot(t_dem,x(i,:),'.g');
+%         hold on
+%         plot(t_run,dmp.tmp(i,:),'k')
+%         hold on
+%         plot(t_run,dmp.y(i,:),'r');
+% 
+%         subplot(1,3,2);
+%         plot(t_dem,xd(i,:),'.g');
+%         hold on
+%         plot(t_run,dmp.yd(i,:),'r');
+% 
+%         subplot(1,3,3);
+%         plot(t_dem,xdd(i,:),'.g');
+%         hold on
+%         plot(t_run,dmp.ydd(i,:),'r');
+%     end
 end
 
 

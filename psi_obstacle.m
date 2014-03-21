@@ -1,6 +1,10 @@
-function pot=psi_obstacle(x,v,i_obstacle)
+%%函数执行前要先设置 obstacle
+
+function pot=psi_obstacle(x,v,dim)
+	obstacle = evalin('base','obstacle');
     lambda=1;
-    p=abs(x-x_obstacle);
-    cosa=1;
-    pot=lambda*(-cosa)^2*v/p;
+    px=norm(x-obstacle);
+	v_norm=norm(v);
+    cosa=v'*x;
+    pot=lambda*(-cosa)^2*v_norm/px;
 end
