@@ -2,12 +2,11 @@
 
 function pot=psi_obstacle(x,v,dim)
 	obstacle = evalin('base','obstacle');
-    lambda=1.1;
+    lambda=1;
     
-    a=linspace(min(x),max(x),5);
+    a=linspace(min(x),max(x),20);
     [xx,yy,zz]=meshgrid(a,a,a);
     
-    out = zeros(length(xx),length(yy),length(zz));
     for i=1:length(xx)
         for j=1:length(yy)
             for k=1:length(zz)
@@ -24,16 +23,6 @@ function pot=psi_obstacle(x,v,dim)
     
    [FX,FY,FZ]=gradient(out);
    
-   [tmp,i]=min(abs(a-x(1)));
-   [tmp,j]=min(abs(a-x(2)));
-   [tmp,k]=min(abs(a-x(3)));
-   switch dim
-       case 1
-           pot=-FX(i,j,k);
-       case 2
-           pot=-FY(i,j,k);
-       case 3
-           pot=-FZ(i,j,k);
-   end
+   x(1)-xx(1:)
    
 end

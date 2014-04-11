@@ -89,22 +89,24 @@ end
 y=[dmp.y'];
 gm=dmp.tmp;
 % % y=[dmp.y',dmp.yd',dmp.ydd'];
-% figure;
-% subplot(1,3,1);
-% plot(t_dem,x,'.g');
-% hold on
-% plot(t_run,dmp.tmp,'k')
-% hold on
-% plot(t_run,dmp.y,'r');
-% 
-% subplot(1,3,2);
-% plot(t_dem,xd,'.g');
-% hold on
-% plot(t_run,dmp.yd,'r');
-% 
-% subplot(1,3,3);
-% plot(t_dem,xdd,'.g');
-% hold on
-% plot(t_run,dmp.ydd,'r');
+if nargout==0
+    figure;
+    subplot(1,3,1);
+    plot(t_dem,x,'.g');
+    hold on
+    plot(t_run,dmp.tmp,'k')
+    hold on
+    plot(t_run,dmp.y,'r');
+
+    subplot(1,3,2);
+    plot(t_dem,xd,'.g');
+    hold on
+    plot(t_run,dmp.yd,'r');
+
+    subplot(1,3,3);
+    plot(t_dem,xdd,'.g');
+    hold on
+    plot(t_run,dmp.ydd,'r');
+end
 end
 

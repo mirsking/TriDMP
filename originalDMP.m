@@ -3,9 +3,9 @@ clear all;close all;clc;
 %% 演示轨迹
 syms t;
 %%  胡晋师兄的多项式  可演示巨大加速度
-x = 2*t.^2+cos(4*pi*t).*(1-t)-1;
+% x = 2*t.^2+cos(4*pi*t).*(1-t)-1;
 %% 轨迹的初末位置相同，系统无非线性外力项干涉，整个系统的状态将保持在初始状态
-% x=-t.^5+3*t.^4-3*t.^3+t.^2;  %改造后可演示镜像效果
+x=-t.^5+3*t.^4-3*t.^3+t.^2;  %改造后可演示镜像效果
 xd = diff(x);
 xdd = diff(xd);
 
@@ -59,10 +59,12 @@ dmp.psi = exp( -dmp.wh*ones(1,length(x)) .* ( ( ones(length(dmp.wc),1)*dmp.s - d
 % original transformation system
 dmp.f = (dmp.tau.^2*xdd-dmp.K*(dmp.g-x)+dmp.D*dmp.tau*xd)/(dmp.A+1.e-10);   %1*1001
 % locally weighted linear regression
-wDen = sum( dmp.psi .* ( ones(length(dmp.wc),1)*dmp.s ) ,2);
-wNum = sum( dmp.psi .* ( ones(length(dmp.wc),1)*dmp.f ) ,2);
-dmp.w = wNum./(wDen+1.e-10);
-plot(dmp.w)
+% wDen = sum( dmp.psi .* ( ones(length(dmp.wc),1)*dmp.s ) ,2);
+% wNum = sum( dmp.psi .* ( ones(length(dmp.wc),1)*dmp.f ) ,2);
+% dmp.w = wNum./(wDen+1.e-10);
+wDen = sum( dmp.psi .* ( ones(length(dmp.wc),1)*(dmp.s.*dmp.s) ) ,2);
+wNum = sum( dmp.psi .* ( ones(length(dmp.wc),1)*(dmp.s.*dmp.f) ) ,2);
+dmp.w = wNum./(wDen);%+1.e-10
 %% 学习后轨迹再现
 
 t_run = 0:dt:traj_time;

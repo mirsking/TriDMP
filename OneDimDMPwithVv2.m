@@ -25,7 +25,7 @@ function [y,gm]=OneDimDMPwithVv2(x,t_dem,t_run,g_m,v_m)%i_obstacle
     dmp.tau=t_dem(end)-t_dem(1);  %dmp时间比例因子
     dmp.x0=x(:,1);
     dmp.g=x(:,end);
-    dmp.A=x(:,end)-x(:,1);
+%     dmp.A=x(:,end)-x(:,1);
     dmp.alpha=4;
     % 权重函数初始化
     n_w=length(t_dem)/10;   %权重函数个数 取100个，数量越多精度越高。最大值为训练数据个数。
@@ -61,7 +61,7 @@ function [y,gm]=OneDimDMPwithVv2(x,t_dem,t_run,g_m,v_m)%i_obstacle
     dmp.x0=x(:,1);
     dmp.g=g_m;
     dmp.vm=v_m;
-    dmp.A=dmp.g-x(:,1);
+%     dmp.A=dmp.g-x(:,1);
     dmp.s1=1*ones(x_dim,1);
     % dmp.s1 = exp((-dmp.alpha/dmp.tau).*t_run);
     dmp.x1=x(:,1);
@@ -73,9 +73,9 @@ function [y,gm]=OneDimDMPwithVv2(x,t_dem,t_run,g_m,v_m)%i_obstacle
             dmp.psi1(:,j) = exp(-dmp.wh.*((dmp.s1(j)-dmp.wc).^2));
             dmp.f1(j) = sum(dmp.psi1(:,j).*dmp.w(:,:,j)*dmp.s1(j))/sum(dmp.psi1(:,j)+1.e-10);
             if i==1
-                dmp.v1_d(j)=(dmp.K*(dmp.gm(j)-dmp.x1(j))+dmp.D*(dmp.vm(j)-dmp.v1(j))-dmp.K*(dmp.gm(j)-dmp.x0(j))*dmp.s1(j)+dmp.K*dmp.f1(j)+psi_obstacle(dmp.x1(j),dmp.v1(j),j))/dmp.tau;           
+                dmp.v1_d(j)=(dmp.K*(dmp.gm(j)-dmp.x1(j))+dmp.D*(dmp.vm(j)-dmp.v1(j))-dmp.K*(dmp.gm(j)-dmp.x0(j))*dmp.s1(j)+dmp.K*dmp.f1(j)+psi_obstacle(dmp.x1,dmp.v1,j))/dmp.tau;           
             else       
-                dmp.v1_d(j)=(dmp.K*(dmp.gm(j)-dmp.x1(j))+dmp.D*(dmp.vm(j)-dmp.v1(j))-dmp.K*(dmp.gm(j)-dmp.x0(j))*dmp.s1(j)+dmp.K*dmp.f1(j)+psi_obstacle(dmp.y(j,i-1),dmp.tau*dmp.yd(j,i-1),j))/dmp.tau;
+                dmp.v1_d(j)=(dmp.K*(dmp.gm(j)-dmp.x1(j))+dmp.D*(dmp.vm(j)-dmp.v1(j))-dmp.K*(dmp.gm(j)-dmp.x0(j))*dmp.s1(j)+dmp.K*dmp.f1(j)+psi_obstacle(dmp.y(:,i-1),dmp.tau*dmp.yd(:,i-1),j))/dmp.tau;
             end
             %由于循环x_dim次才能更新本次的全部坐标信息，所以暂时使用上一次的点作为势场计算基准
             dmp.x1_d(j)=dmp.v1(j)/dmp.tau;
@@ -92,28 +92,30 @@ function [y,gm]=OneDimDMPwithVv2(x,t_dem,t_run,g_m,v_m)%i_obstacle
         end
 
     end
-    y=[dmp.y'];
+    y=dmp.y';
     gm=dmp.tmp;
+    if nargout==0
 %     % % y=[dmp.y',dmp.yd',dmp.ydd'];
-%     for i=1:x_dim
-%         figure;
-%         subplot(1,3,1);
-%         plot(t_dem,x(i,:),'.g');
-%         hold on
-%         plot(t_run,dmp.tmp(i,:),'k')
-%         hold on
-%         plot(t_run,dmp.y(i,:),'r');
-% 
-%         subplot(1,3,2);
-%         plot(t_dem,xd(i,:),'.g');
-%         hold on
-%         plot(t_run,dmp.yd(i,:),'r');
-% 
-%         subplot(1,3,3);
-%         plot(t_dem,xdd(i,:),'.g');
-%         hold on
-%         plot(t_run,dmp.ydd(i,:),'r');
-%     end
+        for i=1:x_dim
+            figure;
+            subplot(1,3,1);
+            plot(t_dem,x(i,:),'.g');
+            hold on
+            plot(t_run,dmp.tmp(i,:),'k')
+            hold on
+            plot(t_run,dmp.y(i,:),'r');
+
+            subplot(1,3,2);
+            plot(t_dem,xd(i,:),'.g');
+            hold on
+            plot(t_run,dmp.yd(i,:),'r');
+
+            subplot(1,3,3);
+            plot(t_dem,xdd(i,:),'.g');
+            hold on
+            plot(t_run,dmp.ydd(i,:),'r');
+        end
+    end
 end
 
 

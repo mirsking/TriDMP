@@ -9,8 +9,8 @@ ToolboxWay=1;%使用工具箱解法
 % RotFlag=1;%对姿态进行调整
 RotFlag=0;%不对姿态进行DMP
 %是否保存为gif
-SaveGif=1;%保存为GIF
-% SaveGif=0;%不保存为GIF
+% SaveGif=1;%保存为GIF
+SaveGif=0;%不保存为GIF
 %% ********************************************%
 %*****************0 Make Arm Model********************%
 %*****************************************************%
@@ -64,13 +64,15 @@ obstacle=p_orign(:,i_obstacle);
 % for i=1:3    
 %     [p_DMP(:,i),gtmp(i,:)]=OneDimDMPwithV(p_orign(:,i)',1,1,p_orign(end,i)*0.9,(p_orign(end,i)-p_orign(end-1,i))/0.001+0.5);%p_end = p_orign(end,i); v = (p_orign(end,i)-p_orign(end-1,i))/0.001
 % end
-[p_DMP(:,1:3),gtmp(1:3,:)]=OneDimDMPwithVv2(p_orign,1,1,1.01*p_orign(:,end),0.2+(p_orign(:,end)-p_orign(:,(end-1)))/0.001);
-%姿态DMP
-R_orign=tr2rpy(T)';
-% for i=1:3    
-%     [R_DMP(:,i),gtmp(i+3,:)]=OneDimDMPwithV(R_orign(:,i)',1,1,R_orign(end,i),(R_orign(end,i)-R_orign(end-1,i))/0.001);
-% end
-[R_DMP(:,1:3),gtmp(4:6,:)]=OneDimDMPwithVv2(R_orign,1,1,R_orign(:,end),(R_orign(:,end)-R_orign(:,(end-1)))/0.001);
+[p_DMP(:,1:3),gtmp(1:3,:)]=OneDimDMPwithVv2(p_orign,1,1,p_orign(:,end),(p_orign(:,end)-p_orign(:,(end-1)))/0.001);
+if RotFlag==1
+    %姿态DMP
+    R_orign=tr2rpy(T)';
+    % for i=1:3
+    %     [R_DMP(:,i),gtmp(i+3,:)]=OneDimDMPwithV(R_orign(:,i)',1,1,R_orign(end,i),(R_orign(end,i)-R_orign(end-1,i))/0.001);
+    % end
+    [R_DMP(:,1:3),gtmp(4:6,:)]=OneDimDMPwithVv2(R_orign,1,1,R_orign(:,end),(R_orign(:,end)-R_orign(:,(end-1)))/0.001);
+end
 %% 如何将DMP得到的轨迹逆运动到关节空间
 %1、找到目标点和当前点的位姿
 %初始点的位姿T(:,:,1)
@@ -145,7 +147,10 @@ hold on
 plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'k*');
 hold on
 %障碍物
-plot3(obstacle(1),obstacle(2),obstacle(3),'b*');
+plot3(obstacle(1),obstacle(2),obstacle(3),'bo');
+% r=0.005;
+% ellipsoid(obstacle(1),obstacle(2),obstacle(3),r,r,r,10)
+
 hold on
 for i=1:10:size(q,1)
     plot3(gtmp(1,i),gtmp(2,i),gtmp(3,i),'c*');
