@@ -11,6 +11,7 @@ RotFlag=0;%不对姿态进行DMP
 %是否保存为gif
 % SaveGif=1;%保存为GIF
 SaveGif=0;%不保存为GIF
+SaveEPS=1;%每帧保存为eps
 %% ********************************************%
 %*****************0 Make Arm Model********************%
 %*****************************************************%
@@ -58,13 +59,18 @@ else
 end
 %位置DMP
 p_orign=transl(T)';
-i_obstacle=fix(size(p_orign,2)/2);
-% i_obstacle=1;
-obstacle=p_orign(:,i_obstacle);
+% i_obstacle=fix(0.55*size(p_orign,2));
+i_obstacle=11;
+% obstacle=p_orign(:,i_obstacle);
+obstacle=[0.405847837670121,0.405660717661472,0.374604161729171]';
+% obstacle=[0.252904217889755,0.431872955145309,0.405040793032987]';
 % for i=1:3    
 %     [p_DMP(:,i),gtmp(i,:)]=OneDimDMPwithV(p_orign(:,i)',1,1,p_orign(end,i)*0.9,(p_orign(end,i)-p_orign(end-1,i))/0.001+0.5);%p_end = p_orign(end,i); v = (p_orign(end,i)-p_orign(end-1,i))/0.001
 % end
-[p_DMP(:,1:3),gtmp(1:3,:)]=OneDimDMPwithVv2(p_orign,1,1,p_orign(:,end),(p_orign(:,end)-p_orign(:,(end-1)))/0.001);
+% 无末速
+% [p_DMP(:,1:3),gtmp(1:3,:)]=OneDimDMPwithVv2(p_orign,1,1,p_orign(:,end),(p_orign(:,end)-p_orign(:,(end-1)))/0.001);
+% 有末速
+[p_DMP(:,1:3),gtmp(1:3,:)]=OneDimDMPwithVv2(p_orign,1,1,p_orign(:,end),(p_orign(:,end)-p_orign(:,(end-1)))/0.001+0.2);
 if RotFlag==1
     %姿态DMP
     R_orign=tr2rpy(T)';
@@ -147,7 +153,7 @@ hold on
 plot3(gtmp(1,end),gtmp(2,end),gtmp(3,end),'k*');
 hold on
 %障碍物
-plot3(obstacle(1),obstacle(2),obstacle(3),'bo');
+plot3(obstacle(1),obstacle(2),obstacle(3),'b*');
 % r=0.005;
 % ellipsoid(obstacle(1),obstacle(2),obstacle(3),r,r,r,10)
 
@@ -159,6 +165,9 @@ for i=1:10:size(q,1)
     hold on
     if SaveGif==1
         MakeGif('DMP.gif',i);
+    end
+    if SaveEPS==1
+        saveas(gcf,strcat('figures\out',num2str(i),'.eps'),'psc2');
     end
 end
 hold on

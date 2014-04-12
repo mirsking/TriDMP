@@ -2,7 +2,12 @@
 
 function pot=psi_obstacle(x,v,dim)
 	obstacle = evalin('base','obstacle');
-    lambda=1.1;
+    i_obstacle = evalin('base','i_obstacle');
+    if i_obstacle==1
+       pot=0;
+       return;
+    end
+    lambda=1;
     
     a=linspace(min(x),max(x),5);
     [xx,yy,zz]=meshgrid(a,a,a);
